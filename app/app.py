@@ -150,9 +150,9 @@ def main() :
         #Age distribution plot
         data_age = load_age_population(data)
         fig, ax = plt.subplots(figsize=(10, 5))
-        sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins = 20)
+        sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins=20)
         plt.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
-        plt.title('Customer ages')
+        plt.title('Customer age')
         plt.xlabel('Age (Year)')
         plt.ylabel('')
         st.pyplot(fig)
@@ -160,6 +160,17 @@ def main() :
         
         st.subheader("*Income (USD)*")
         st.write("Income total :", infos_client["AMT_INCOME_TOTAL"].values[0])
+        
+        #Income distribution plot
+        data_income = load_income_population(data)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        sns.histplot(data_income["AMT_INCOME_TOTAL"], edgecolor = 'k', color="goldenrod", bins=10)
+        plt.axvline(int(infos_client["AMT_INCOME_TOTAL"].values[0], color="green", linestyle='--')
+        plt.title('Customer income')
+        plt.xlabel('Income (USD)')
+        plt.ylabel('')
+        st.pyplot(fig)
+        
         st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
         st.write("Credit annuities :", infos_client["AMT_ANNUITY"].values[0])
         st.write("Amount of property for credit :", infos_client["AMT_GOODS_PRICE"].values[0])
