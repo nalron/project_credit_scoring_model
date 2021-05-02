@@ -147,6 +147,17 @@ def main() :
         st.write("Family status :**", infos_client["NAME_FAMILY_STATUS"].values[0], "**")
         st.write("Number of children :**", infos_client["CNT_CHILDREN"].values[0], "**") 
 
+        #Age distribution plot
+        data_age = load_age_population(data)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins = 20)
+        plt.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
+        plt.title('Customer ages')
+        plt.xlabel('Age (Year)')
+        plt.ylabel('')
+        st.pyplot(fig)
+        
+        
         st.subheader("*Income (USD)*")
         st.write("Income total :", infos_client["AMT_INCOME_TOTAL"].values[0])
         st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
