@@ -151,10 +151,8 @@ def main() :
         data_age = load_age_population(data)
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins=20)
-        plt.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
-        plt.title('Customer age')
-        plt.xlabel('Age (Year)')
-        plt.ylabel('')
+        ax.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
+        ax.set(title='Customer age', xlabel='Age(Year)', ylabel='')
         st.pyplot(fig)
         
         
@@ -165,10 +163,8 @@ def main() :
         data_income = load_income_population(data)
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_income["AMT_INCOME_TOTAL"], edgecolor = 'k', color="goldenrod", bins=10)
-        plt.axvline(int(infos_client["AMT_INCOME_TOTAL"].values[0], color="green", linestyle='--')
-        plt.title('Customer income')
-        plt.xlabel('Income (USD)')
-        plt.ylabel('')
+        ax.axvline(int(infos_client["AMT_INCOME_TOTAL"].values[0], color="green", linestyle='--')
+        ax.set(title='Customer income', xlabel='Income (USD)', ylabel='')
         st.pyplot(fig)
         
         st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
