@@ -128,6 +128,13 @@ def main() :
     #AMT CREDIT
     st.sidebar.markdown("<u>Average loan amount (USD) :</u>", unsafe_allow_html=True)
     st.sidebar.text(credits_moy)
+    
+    #PieChart
+    #st.sidebar.markdown("<u>......</u>", unsafe_allow_html=True)
+    fig, ax = plt.subplots(figsize=(5,5))
+    plt.pie(targets, explode=[0, 0.1], labels=['No default', 'Default'], autopct='%1.1f%%', startangle=90)
+    st.sidebar.pyplot(fig)
+    
 
     #######################################
     # HOME PAGE - MAIN CONTENT
