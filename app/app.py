@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+import plotly.express as px
 from zipfile import ZipFile
 from sklearn.cluster import KMeans
 plt.style.use('fivethirtyeight')
@@ -161,10 +162,13 @@ def main() :
         ax.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
         ax.set(title='Customer age', xlabel='Age(Year)', ylabel='')
         st.pyplot(fig)
-        
+    
         
         st.subheader("*Income (USD)*")
         st.write("Income total :", infos_client["AMT_INCOME_TOTAL"].values[0])
+        st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
+        st.write("Credit annuities :", infos_client["AMT_ANNUITY"].values[0])
+        st.write("Amount of property for credit :", infos_client["AMT_GOODS_PRICE"].values[0])
         
         #Income distribution plot
         data_income = load_income_population(data)
@@ -174,9 +178,27 @@ def main() :
         ax.set(title='Customer income', xlabel='Income (USD)', ylabel='')
         st.pyplot(fig)
         
-        st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
-        st.write("Credit annuities :", infos_client["AMT_ANNUITY"].values[0])
-        st.write("Amount of property for credit :", infos_client["AMT_GOODS_PRICE"].values[0])
+        #Relationship Age / Income Total interactive plot 
+        data_sk = data.reset_index(drop=False)
+        data_sk.DAYS_BIRTH = (data_sk['DAYS_BIRTH']/365).round(1)
+        fig, ax = plt.subplots(figsize=(10, 10))
+        fig = px.scatter(data_sk, x='DAYS_BIRTH', y="AMT_INCOME_TOTAL", 
+                         size="AMT_INCOME_TOTAL", color='CODE_GENDER',
+                         hover_data=['NAME_FAMILY_STATUS', 'CNT_CHILDREN', 'NAME_CONTRACT_TYPE', 'SK_ID_CURR'])
+
+        fig.update_layout({'plot_bgcolor':'#f0f0f0', 'paper_bgcolor':'#f0f0f0'}, 
+                          title={'text':"Relationship Age / Income Total"}, 
+                          title_font=dict(size=20, family='Verdana'), legend=dict(y=1.1, orientation='h'))
+
+
+        fig.update_traces(marker=dict(line=dict(width=0.5, color='#3a352a')), selector=dict(mode='markers'))
+        fig.update_xaxes(showline=True, linewidth=2, linecolor='#f0f0f0', gridcolor='#cbcbcb',
+                         title="Age", title_font=dict(size=18, family='Verdana'))
+        fig.update_yaxes(showline=True, linewidth=2, linecolor='#f0f0f0', gridcolor='#cbcbcb',
+                         title="Income Total", title_font=dict(size=18, family='Verdana'))
+
+        st.plotly_chart(fig)
+    
     else:
         st.markdown("<i>…</i>", unsafe_allow_html=True)
 
