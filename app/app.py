@@ -150,10 +150,10 @@ def main() :
     if st.checkbox("Show customer information ?"):
 
         infos_client = identite_client(data, chk_id)
-        st.write("Gender :**", infos_client["CODE_GENDER"].values[0], "**")
-        st.write("Age :", int(infos_client["DAYS_BIRTH"]/365), "ans")
-        st.write("Family status :**", infos_client["NAME_FAMILY_STATUS"].values[0], "**")
-        st.write("Number of children :**", infos_client["CNT_CHILDREN"].values[0], "**") 
+        st.write("**Gender : **", infos_client["CODE_GENDER"].values[0])
+        st.write("**Age : **{:.0f} ans".format(int(infos_client["DAYS_BIRTH"]/365)))
+        st.write("**Family status : **", infos_client["NAME_FAMILY_STATUS"].values[0])
+        st.write("**Number of children : **{:.0f}".format(infos_client["CNT_CHILDREN"].values[0]))
 
         #Age distribution plot
         data_age = load_age_population(data)
@@ -165,10 +165,10 @@ def main() :
     
         
         st.subheader("*Income (USD)*")
-        st.write("Income total :", infos_client["AMT_INCOME_TOTAL"].values[0])
-        st.write("Credit amount :", infos_client["AMT_CREDIT"].values[0])
-        st.write("Credit annuities :", infos_client["AMT_ANNUITY"].values[0])
-        st.write("Amount of property for credit :", infos_client["AMT_GOODS_PRICE"].values[0])
+        st.write("**Income total : **{:.0f}".format(infos_client["AMT_INCOME_TOTAL"].values[0]))
+        st.write("**Credit amount : **{:.0f}".format(infos_client["AMT_CREDIT"].values[0]))
+        st.write("**Credit annuities : **{:.0f}".format(infos_client["AMT_ANNUITY"].values[0]))
+        st.write("**Amount of property for credit : **{:.0f}".format(infos_client["AMT_GOODS_PRICE"].values[0]))
         
         #Income distribution plot
         data_income = load_income_population(data)
@@ -204,12 +204,20 @@ def main() :
 
     #Customer solvability display
     st.header("**Customer file analysis**")
-    st.markdown("<u>Default probability :</u>", unsafe_allow_html=True)
     prediction = load_prediction(sample, chk_id, clf)
-    st.write(round(float(prediction)*100, 2), "%")
+    st.write("**Default probability : **{:.0f} %".format(round(float(prediction)*100, 2)))
+
+    #Compute decision according to the best threshold
+    if prediction < 0.50:
+        decision = "<font color='green'>**LOAN GRANTED**</font>" 
+    else:
+        decision = "<font color='red'>**LOAN REJECTED**</font>"
+
+    st.write("**Decision** *(with threshold 50%)* **: **", decision, unsafe_allow_html=True)
 
     st.markdown("<u>Customer Data :</u>", unsafe_allow_html=True)
-    st.write(identite_client(data, chk_id)) 
+    st.write(identite_client(data, chk_id))
+
     
     #Feature importance
     st.markdown("<u>Feature importance :</u>", unsafe_allow_html=True)
