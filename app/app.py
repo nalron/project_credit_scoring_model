@@ -163,7 +163,7 @@ def main() :
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins=20)
         ax.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
-        ax.set(title='Customer age', xlabel='Age(Year)', ylabel='')
+        ax.set(title='Customer age', xlabel='Age(Year)', ylabel='', fontweight="bold")
         st.pyplot(fig)
     
         
@@ -178,7 +178,7 @@ def main() :
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_income["AMT_INCOME_TOTAL"], edgecolor = 'k', color="goldenrod", bins=10)
         ax.axvline(int(infos_client["AMT_INCOME_TOTAL"].values[0]), color="green", linestyle='--')
-        ax.set(title='Customer income', xlabel='Income (USD)', ylabel='')
+        ax.set(title='Customer income', xlabel='Income (USD)', ylabel='', fontweight="bold")
         st.pyplot(fig)
         
         #Relationship Age / Income Total interactive plot 
@@ -190,7 +190,7 @@ def main() :
                          hover_data=['NAME_FAMILY_STATUS', 'CNT_CHILDREN', 'NAME_CONTRACT_TYPE', 'SK_ID_CURR'])
 
         fig.update_layout({'plot_bgcolor':'#f0f0f0', 'paper_bgcolor':'#f0f0f0'}, 
-                          title={'text':"Relationship Age / Income Total", 'x':0.5, 'xanchor': 'center'}, 
+                          title={'text':"<b>Relationship Age / Income Total</b>", 'x':0.5, 'xanchor': 'center'}, 
                           title_font=dict(size=20, family='Verdana'), legend=dict(y=1.1, orientation='h'))
 
 
@@ -222,10 +222,10 @@ def main() :
     st.write(identite_client(data, chk_id))
 
     
-    #Features importance / description
-    if st.checkbox("Show Feature importance ?"):
+    #Feature importance / description
+    if st.checkbox("Show Feature importance / description ?"):
 
-        number = st.slider("**Pick a number of features**", 0, 50, 10)
+        number = st.slider("Pick a number of features…", 0, 50, 10)
 
         indices = np.argsort(load_model().feature_importances_)[::-1]
         features = []
@@ -239,7 +239,6 @@ def main() :
         plt.xticks(rotation=90)
         st.pyplot(fig)
         
-        st.markdown("<u>Features description :</u>", unsafe_allow_html=True)
         list_features = description.index.to_list()
         feature = st.selectbox('Feature checklist…', list_features)
         st.table(description.loc[description.index == feature][:1])
