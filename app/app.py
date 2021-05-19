@@ -220,20 +220,24 @@ def main() :
 
     
     #Feature importance
-    st.markdown("<u>Feature importance :</u>", unsafe_allow_html=True)
-    number = st.slider("Pick a number of features", 0, 50, 10)
+    if st.checkbox("Show Feature importance ?"):
 
-    indices = np.argsort(load_model().feature_importances_)[::-1]
-    features = []
-    for i in range(number):
-        features.append(sample.columns[indices[i]]) 
+        number = st.slider("**Pick a number of features**", 0, 50, 10)
 
-    fig, ax = plt.subplots(figsize=(10, 15))
-    sns.barplot(y=features, x=load_model().feature_importances_[indices[range(number)]], 
-                color="goldenrod")
-    plt.xlabel('')
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+        indices = np.argsort(load_model().feature_importances_)[::-1]
+        features = []
+        for i in range(number):
+            features.append(sample.columns[indices[i]]) 
+
+        fig, ax = plt.subplots(figsize=(10, 15))
+        sns.barplot(y=features, x=load_model().feature_importances_[indices[range(number)]], 
+                    color="goldenrod")
+        plt.xlabel('')
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
+    else:
+    st.markdown("<i>…</i>", unsafe_allow_html=True)
+    
 
     #Similar customer files display
     chk_voisins = st.checkbox("Show similar customer files ?")
