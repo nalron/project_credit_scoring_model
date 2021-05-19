@@ -106,7 +106,7 @@ def main() :
     <div style="background-color: tomato; padding:10px; border-radius:10px">
     <h1 style="color: white; text-align:center">Dashboard Scoring Credit</h1>
     </div>
-    <p style="color: white; font-size: 20px; font-weight: bold; text-align:center">Credit decision support…</p>
+    <p style="color: black; font-size: 20px; font-weight: bold; text-align:center">Credit decision support…</p>
     """
     st.markdown(html_temp, unsafe_allow_html=True)
 
@@ -163,7 +163,7 @@ def main() :
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_age, edgecolor = 'k', color="goldenrod", bins=20)
         ax.axvline(int(infos_client["DAYS_BIRTH"].values / 365), color="green", linestyle='--')
-        ax.set(title='Customer age', xlabel='Age(Year)', ylabel='', fontweight="bold")
+        ax.set(title='Customer age', xlabel='Age(Year)', ylabel='')
         st.pyplot(fig)
     
         
@@ -178,7 +178,7 @@ def main() :
         fig, ax = plt.subplots(figsize=(10, 5))
         sns.histplot(data_income["AMT_INCOME_TOTAL"], edgecolor = 'k', color="goldenrod", bins=10)
         ax.axvline(int(infos_client["AMT_INCOME_TOTAL"].values[0]), color="green", linestyle='--')
-        ax.set(title='Customer income', xlabel='Income (USD)', ylabel='', fontweight="bold")
+        ax.set(title='Customer income', xlabel='Income (USD)', ylabel='')
         st.pyplot(fig)
         
         #Relationship Age / Income Total interactive plot 
@@ -190,7 +190,7 @@ def main() :
                          hover_data=['NAME_FAMILY_STATUS', 'CNT_CHILDREN', 'NAME_CONTRACT_TYPE', 'SK_ID_CURR'])
 
         fig.update_layout({'plot_bgcolor':'#f0f0f0', 'paper_bgcolor':'#f0f0f0'}, 
-                          title={'text':"<b>Relationship Age / Income Total</b>", 'x':0.5, 'xanchor': 'center'}, 
+                          title={'text':"Relationship Age / Income Total", 'x':0.5, 'xanchor': 'center'}, 
                           title_font=dict(size=20, family='Verdana'), legend=dict(y=1.1, orientation='h'))
 
 
