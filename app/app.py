@@ -20,10 +20,13 @@ def main() :
 
         z = ZipFile("data/X_sample.zip")
         sample = pd.read_csv(z.open('X_sample.csv'), index_col='SK_ID_CURR', encoding ='utf-8')
+        
+        description = pd.read_csv("data/features_description.csv", 
+                                  usecols=['Row', 'Description'], index_col=0, encoding= 'unicode_escape')
 
         target = data.iloc[:, -1:]
 
-        return data, sample, target
+        return data, sample, target, description
 
 
     def load_model():
@@ -80,7 +83,7 @@ def main() :
         data_client = pd.DataFrame(sample.loc[sample.index, :])
         df_neighbors = pd.DataFrame(knn.fit_predict(data_client), index=data_client.index)
         df_neighbors = pd.concat([df_neighbors, data], axis=1)
-        return df_neighbors.sample(10)
+        return df_neighbors.iloc[:,1:].sample(10)
 
     def knn_training(sample):
         knn = KMeans(n_clusters=2).fit(sample)
@@ -89,7 +92,7 @@ def main() :
 
 
     #Loading data……
-    data, sample, target = load_data()
+    data, sample, target, description = load_data()
     id_client = sample.index.values
     clf = load_model()
 
@@ -208,18 +211,18 @@ def main() :
     st.write("**Default probability : **{:.0f} %".format(round(float(prediction)*100, 2)))
 
     #Compute decision according to the best threshold
-    if prediction < 0.50:
+    if prediction <= 0.25:
         decision = "<font color='green'>**LOAN GRANTED**</font>" 
     else:
         decision = "<font color='red'>**LOAN REJECTED**</font>"
 
-    st.write("**Decision** *(with threshold 50%)* **: **", decision, unsafe_allow_html=True)
+    st.write("**Decision** *(with threshold 25%)* **: **", decision, unsafe_allow_html=True)
 
     st.markdown("<u>Customer Data :</u>", unsafe_allow_html=True)
     st.write(identite_client(data, chk_id))
 
     
-    #Feature importance
+    #Features importance / description
     if st.checkbox("Show Feature importance ?"):
 
         number = st.slider("**Pick a number of features**", 0, 50, 10)
@@ -235,8 +238,15 @@ def main() :
         plt.xlabel('')
         plt.xticks(rotation=90)
         st.pyplot(fig)
+        
+        st.markdown("<u>Features description :</u>", unsafe_allow_html=True)
+        list_features = description.index.to_list()
+        feature = st.selectbox('Feature checklist…', list_features)
+        st.table(description.loc[description.index == feature][:1])
+        
     else:
-    st.markdown("<i>…</i>", unsafe_allow_html=True)
+        st.markdown("<i>…</i>", unsafe_allow_html=True)
+            
     
 
     #Similar customer files display
