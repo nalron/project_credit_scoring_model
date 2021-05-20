@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+import shap
 import plotly.express as px
 from zipfile import ZipFile
 from sklearn.cluster import KMeans
@@ -106,7 +107,7 @@ def main() :
     <div style="background-color: tomato; padding:10px; border-radius:10px">
     <h1 style="color: white; text-align:center">Dashboard Scoring Credit</h1>
     </div>
-    <p style="color: black; font-size: 20px; font-weight: bold; text-align:center">Credit decision support…</p>
+    <p style="font-size: 20px; font-weight: bold; text-align:center">Credit decision support…</p>
     """
     st.markdown(html_temp, unsafe_allow_html=True)
 
@@ -189,7 +190,7 @@ def main() :
                          size="AMT_INCOME_TOTAL", color='CODE_GENDER',
                          hover_data=['NAME_FAMILY_STATUS', 'CNT_CHILDREN', 'NAME_CONTRACT_TYPE', 'SK_ID_CURR'])
 
-        fig.update_layout({'plot_bgcolor':'#f0f0f0', 'paper_bgcolor':'#f0f0f0'}, 
+        fig.update_layout({'plot_bgcolor':'#f0f0f0'}, 
                           title={'text':"Relationship Age / Income Total", 'x':0.5, 'xanchor': 'center'}, 
                           title_font=dict(size=20, family='Verdana'), legend=dict(y=1.1, orientation='h'))
 
@@ -223,25 +224,38 @@ def main() :
 
     
     #Feature importance / description
-    if st.checkbox("Show Feature importance / description ?"):
+    if st.checkbox("Show global feature importance ?"):
 
-        number = st.slider("Pick a number of features…", 0, 50, 10)
+        number = st.slider("Pick a number of features…", 0, 20, 5)
 
         indices = np.argsort(load_model().feature_importances_)[::-1]
         features = []
         for i in range(number):
             features.append(sample.columns[indices[i]]) 
 
-        fig, ax = plt.subplots(figsize=(10, 15))
-        sns.barplot(y=features, x=load_model().feature_importances_[indices[range(number)]], 
-                    color="goldenrod")
+        fig, ax = plt.subplots(figsize=(10, 10))
+        sns.barplot(y=features, x=load_model().feature_importances_[indices[range(number)]], color="goldenrod")
         plt.xlabel('')
         plt.xticks(rotation=90)
         st.pyplot(fig)
+
+        if st.checkbox("Customer ID {:.0f} feature importance ?".format(chk_id)):
+            shap.initjs()
+            X = sample.copy()
+            X = X[X.index == chk_id]
+            number = st.slider("Pick a number of features…", 0, 20, 5, key=33)
+
+            fig, ax = plt.subplots(figsize=(10, 10))
+            explainer = shap.TreeExplainer(load_model())
+            shap_values = explainer.shap_values(X)
+            shap.summary_plot(shap_values[0], X, plot_type ="bar", max_display=number, color_bar=False, plot_size=(5, 5))
+            st.pyplot(fig)
         
-        list_features = description.index.to_list()
-        feature = st.selectbox('Feature checklist…', list_features)
-        st.table(description.loc[description.index == feature][:1])
+
+            if st.checkbox("Need help about feature description ?") : 
+                list_features = description.index.to_list()
+                feature = st.selectbox('Feature checklist…', list_features)
+                st.table(description.loc[description.index == feature][:1])
         
     else:
         st.markdown("<i>…</i>", unsafe_allow_html=True)
