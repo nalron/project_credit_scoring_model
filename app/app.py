@@ -241,7 +241,7 @@ def main() :
 
         if st.checkbox("Customer ID {:.0f} feature importance ?".format(chk_id)):
             shap.initjs()
-            X = sample.copy()
+            X = sample.iloc[:, :-1]
             X = X[X.index == chk_id]
             number = st.slider("Pick a number of features…", 0, 20, 5, key=33)
 
