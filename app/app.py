@@ -73,11 +73,13 @@ def main() :
         df_income = df_income.loc[df_income['AMT_INCOME_TOTAL'] < 200000, :]
         return df_income
 
+    @st.cache
     def load_prediction(sample, id, clf):
         X=sample.iloc[:, :-1]
         score = clf.predict_proba(X[X.index == int(id)])[:,1]
         return score
 
+    @st.cache
     def load_kmeans(sample, id, mdl):
         index = sample[sample.index == int(id)].index.values
         index = index[0]
@@ -86,6 +88,7 @@ def main() :
         df_neighbors = pd.concat([df_neighbors, data], axis=1)
         return df_neighbors.iloc[:,1:].sample(10)
 
+    @st.cache
     def knn_training(sample):
         knn = KMeans(n_clusters=2).fit(sample)
         return knn 
@@ -139,6 +142,8 @@ def main() :
     fig, ax = plt.subplots(figsize=(5,5))
     plt.pie(targets, explode=[0, 0.1], labels=['No default', 'Default'], autopct='%1.1f%%', startangle=90)
     st.sidebar.pyplot(fig)
+    
+    st.info('Info message')('A Web App by [Tyler Richards](http://www.tylerjrichards.com)')
     
 
     #######################################
@@ -256,6 +261,11 @@ def main() :
         st.markdown("<i>Target 1 = Customer with default</i>", unsafe_allow_html=True)
     else:
         st.markdown("<i>…</i>", unsafe_allow_html=True)
+        
+        
+    st.markdown('***')
+    st.markdown("Thanks for going through this Web App with me! I'd love feedback on this, so if you want to reach out you can find me on [twitter] (https://twitter.com/nalron_) or my [website](https://nalron.com/). *Code from [Github](https://github.com/nalron/project_credit_scoring_model)* ❤️")
+
 
 if __name__ == '__main__':
     main()
