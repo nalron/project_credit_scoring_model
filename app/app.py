@@ -224,38 +224,22 @@ def main() :
 
     
     #Feature importance / description
-    if st.checkbox("Show global feature importance ?"):
-
+    if st.checkbox("Customer ID {:.0f} feature importance ?".format(chk_id)):
+        shap.initjs()
+        X = sample.iloc[:, :-1]
+        X = X[X.index == chk_id]
         number = st.slider("Pick a number of features…", 0, 20, 5)
 
-        indices = np.argsort(load_model().feature_importances_)[::-1]
-        features = []
-        for i in range(number):
-            features.append(sample.columns[indices[i]]) 
-
         fig, ax = plt.subplots(figsize=(10, 10))
-        sns.barplot(y=features, x=load_model().feature_importances_[indices[range(number)]], color="goldenrod")
-        plt.xlabel('')
-        plt.xticks(rotation=90)
+        explainer = shap.TreeExplainer(load_model())
+        shap_values = explainer.shap_values(X)
+        shap.summary_plot(shap_values[0], X, plot_type ="bar", max_display=number, color_bar=False, plot_size=(5, 5))
         st.pyplot(fig)
-
-        if st.checkbox("Customer ID {:.0f} feature importance ?".format(chk_id)):
-            shap.initjs()
-            X = sample.iloc[:, :-1]
-            X = X[X.index == chk_id]
-            number = st.slider("Pick a number of features…", 0, 20, 5, key=33)
-
-            fig, ax = plt.subplots(figsize=(10, 10))
-            explainer = shap.TreeExplainer(load_model())
-            shap_values = explainer.shap_values(X)
-            shap.summary_plot(shap_values[0], X, plot_type ="bar", max_display=number, color_bar=False, plot_size=(5, 5))
-            st.pyplot(fig)
         
-
-            if st.checkbox("Need help about feature description ?") : 
-                list_features = description.index.to_list()
-                feature = st.selectbox('Feature checklist…', list_features)
-                st.table(description.loc[description.index == feature][:1])
+        if st.checkbox("Need help about feature description ?") :
+            list_features = description.index.to_list()
+            feature = st.selectbox('Feature checklist…', list_features)
+            st.table(description.loc[description.index == feature][:1])
         
     else:
         st.markdown("<i>…</i>", unsafe_allow_html=True)
