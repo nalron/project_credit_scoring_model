@@ -142,9 +142,7 @@ def main() :
     fig, ax = plt.subplots(figsize=(5,5))
     plt.pie(targets, explode=[0, 0.1], labels=['No default', 'Default'], autopct='%1.1f%%', startangle=90)
     st.sidebar.pyplot(fig)
-    
-    st.info('Info message')('A Web App by [Tyler Richards](http://www.tylerjrichards.com)')
-    
+        
 
     #######################################
     # HOME PAGE - MAIN CONTENT
