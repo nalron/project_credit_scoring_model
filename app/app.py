@@ -215,12 +215,12 @@ def main() :
     st.write("**Default probability : **{:.0f} %".format(round(float(prediction)*100, 2)))
 
     #Compute decision according to the best threshold
-    if prediction <= 0.25:
-        decision = "<font color='green'>**LOAN GRANTED**</font>" 
-    else:
-        decision = "<font color='red'>**LOAN REJECTED**</font>"
+    #if prediction <= xx :
+    #    decision = "<font color='green'>**LOAN GRANTED**</font>" 
+    #else:
+    #    decision = "<font color='red'>**LOAN REJECTED**</font>"
 
-    st.write("**Decision** *(with threshold 25%)* **: **", decision, unsafe_allow_html=True)
+    #st.write("**Decision** *(with threshold xx%)* **: **", decision, unsafe_allow_html=True)
 
     st.markdown("<u>Customer Data :</u>", unsafe_allow_html=True)
     st.write(identite_client(data, chk_id))
